@@ -1,0 +1,342 @@
+/* Name: Srijan Shandilya | Roll Number: 20231BCA0248 */
+
+/* ===== THEME COLOURS: defined once, reused everywhere with var(--name) ===== */
+:root {
+    --blue-dark: #0b3d91;      /* main university blue (navbar, headings) */
+    --blue: #1a5fd0;           /* primary buttons and links */
+    --blue-light: #e8f0fe;     /* soft blue backgrounds (table header, page background) */
+    --white: #ffffff;          /* cards and forms */
+    --text: #1f2937;           /* normal text colour (dark grey, easier to read than pure black) */
+    --muted: #6b7280;          /* secondary, lighter text */
+    --border: #d1d9e6;         /* thin border lines */
+    --green: #15803d;          /* success messages and Add/Save buttons */
+    --red: #b91c1c;            /* error messages and Delete buttons */
+}
+
+/* ===== GLOBAL RESET AND BASE STYLES ===== */
+* {
+    margin: 0;                 /* remove the browser's default outside spacing */
+    padding: 0;                /* remove the browser's default inside spacing */
+    box-sizing: border-box;    /* width includes padding and border, so layouts do not overflow */
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif; /* clean font; Arial is the fallback */
+    background: var(--blue-light);              /* light blue page background */
+    color: var(--text);                         /* default text colour */
+    line-height: 1.5;                           /* comfortable spacing between text lines */
+    min-height: 100vh;                          /* page is at least as tall as the screen */
+    display: flex;                              /* column layout so the footer sticks to the bottom */
+    flex-direction: column;                     /* stack navbar, content, footer vertically */
+}
+
+/* ===== NAVIGATION BAR ===== */
+.navbar {
+    background: var(--blue-dark);               /* dark blue bar */
+    color: var(--white);                        /* white text inside it */
+    display: flex;                              /* put brand and links in one row */
+    justify-content: space-between;             /* brand on the left, links on the right */
+    align-items: center;                        /* vertically centre both */
+    padding: 14px 30px;                         /* space inside the bar */
+    flex-wrap: wrap;                            /* allow wrapping on small screens */
+    gap: 10px;                                  /* space between wrapped items */
+}
+
+.navbar .brand {
+    font-size: 1.15rem;                         /* slightly larger text for the system name */
+    font-weight: 700;                           /* bold */
+}
+
+.nav-links {
+    display: flex;                              /* links in a row */
+    flex-wrap: wrap;                            /* wrap if there is not enough width */
+    gap: 6px;                                   /* space between links */
+}
+
+.nav-links a {
+    color: var(--white);                        /* white link text */
+    text-decoration: none;                      /* remove underline */
+    padding: 8px 14px;                          /* clickable area around the text */
+    border-radius: 6px;                         /* rounded corners */
+    transition: background 0.2s;                /* smooth colour change on hover */
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    background: var(--blue);                    /* highlight on hover and for the current page */
+}
+
+/* ===== MAIN CONTENT AREA ===== */
+.container {
+    width: 100%;                                /* use the available width... */
+    max-width: 1100px;                          /* ...but never wider than 1100px */
+    margin: 30px auto;                          /* centre horizontally, space above/below */
+    padding: 0 20px;                            /* side space on small screens */
+    flex: 1;                                    /* take all spare height (pushes footer down) */
+}
+
+.page-title {
+    color: var(--blue-dark);                    /* heading colour */
+    margin-bottom: 20px;                        /* space below the heading */
+    font-size: 1.6rem;                          /* heading size */
+}
+
+/* ===== LOGIN / REGISTER CENTRED BOX ===== */
+.auth-wrapper {
+    flex: 1;                                    /* fill the page height */
+    display: flex;                              /* used to centre the box */
+    justify-content: center;                    /* centre horizontally */
+    align-items: center;                        /* centre vertically */
+    padding: 20px;                              /* space around on small screens */
+}
+
+.auth-card {
+    background: var(--white);                   /* white box */
+    width: 100%;                                /* full width on phones... */
+    max-width: 420px;                           /* ...but not wider than 420px on computers */
+    padding: 32px;                              /* space inside the box */
+    border-radius: 10px;                        /* rounded corners */
+    border-top: 5px solid var(--blue-dark);     /* blue strip on top for a university look */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); /* soft shadow to lift the box off the page */
+}
+
+.auth-card h2 {
+    color: var(--blue-dark);                    /* blue heading */
+    text-align: center;                         /* centred heading */
+    margin-bottom: 20px;                        /* space below heading */
+}
+
+.auth-card .switch-link {
+    text-align: center;                         /* centre the "register / login" link text */
+    margin-top: 16px;                           /* space above it */
+    color: var(--muted);                        /* lighter text colour */
+}
+
+.auth-card .switch-link a {
+    color: var(--blue);                         /* link colour */
+}
+
+/* ===== FORMS ===== */
+.form-card {
+    background: var(--white);                   /* white box for add/edit forms */
+    max-width: 600px;                           /* comfortable form width */
+    padding: 28px;                              /* space inside */
+    border-radius: 10px;                        /* rounded corners */
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); /* soft shadow */
+}
+
+.form-group {
+    margin-bottom: 16px;                        /* space between fields */
+}
+
+.form-group label {
+    display: block;                             /* label sits above the input */
+    font-weight: 600;                           /* slightly bold labels */
+    margin-bottom: 6px;                         /* space between label and input */
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;                                /* input fills the box width */
+    padding: 10px 12px;                         /* space inside the input */
+    border: 1px solid var(--border);            /* thin grey border */
+    border-radius: 6px;                         /* rounded corners */
+    font-size: 1rem;                            /* readable text size */
+    background: var(--white);                   /* white background */
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;                              /* remove the default browser outline... */
+    border-color: var(--blue);                  /* ...and use a blue border instead */
+    box-shadow: 0 0 0 3px rgba(26, 95, 208, 0.2); /* soft blue glow while typing */
+}
+
+.form-group input.invalid {
+    border-color: var(--red);                   /* red border, JavaScript adds this class on errors */
+}
+
+.error-text {
+    color: var(--red);                          /* red text for validation messages */
+    font-size: 0.85rem;                         /* smaller than normal text */
+    margin-top: 4px;                            /* small gap under the input */
+    display: block;                             /* message on its own line */
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+    display: inline-block;                      /* behaves like a button even when used on links */
+    padding: 10px 20px;                         /* space inside the button */
+    border: none;                               /* remove default border */
+    border-radius: 6px;                         /* rounded corners */
+    font-size: 1rem;                            /* readable text size */
+    font-weight: 600;                           /* slightly bold text */
+    cursor: pointer;                            /* hand cursor on hover */
+    text-decoration: none;                      /* remove underline when used on <a> */
+    color: var(--white);                        /* white text */
+    transition: background 0.2s, transform 0.1s;/* smooth hover effect */
+}
+
+.btn:hover {
+    transform: translateY(-1px);                /* lifts up by 1px on hover */
+}
+
+.btn-primary   { background: var(--blue); }     /* main action: blue */
+.btn-primary:hover { background: var(--blue-dark); }
+
+.btn-success   { background: var(--green); }    /* save/add: green */
+.btn-success:hover { background: #166534; }
+
+.btn-danger    { background: var(--red); }      /* delete: red */
+.btn-danger:hover { background: #991b1b; }
+
+.btn-secondary { background: var(--muted); }    /* cancel/back: grey */
+.btn-secondary:hover { background: #4b5563; }
+
+.btn-block {
+    width: 100%;                                /* full-width button (login/register) */
+}
+
+.btn-small {
+    padding: 6px 12px;                          /* smaller buttons for Edit/Delete in tables */
+    font-size: 0.9rem;                          /* smaller text */
+}
+
+/* ===== ALERT MESSAGES (success and error) ===== */
+.alert {
+    padding: 12px 16px;                         /* space inside the message box */
+    border-radius: 6px;                         /* rounded corners */
+    margin-bottom: 18px;                        /* space below the message */
+    border-left: 5px solid;                     /* coloured strip on the left (colour set below) */
+}
+
+.alert-success {
+    background: #dcfce7;                        /* light green background */
+    color: var(--green);                        /* dark green text */
+    border-color: var(--green);                 /* green strip */
+}
+
+.alert-error {
+    background: #fee2e2;                        /* light red background */
+    color: var(--red);                          /* dark red text */
+    border-color: var(--red);                   /* red strip */
+}
+
+/* ===== DASHBOARD CARDS ===== */
+.cards {
+    display: grid;                              /* grid layout */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* as many columns as fit, each at least 220px */
+    gap: 20px;                                  /* space between cards */
+}
+
+.card {
+    background: var(--white);                   /* white card */
+    padding: 24px;                              /* space inside */
+    border-radius: 10px;                        /* rounded corners */
+    border-top: 5px solid var(--blue);          /* blue strip on top */
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); /* soft shadow */
+    text-decoration: none;                      /* cards are links, so remove underline */
+    color: var(--text);                         /* normal text colour */
+    transition: transform 0.2s, box-shadow 0.2s;/* smooth hover effect */
+}
+
+.card:hover {
+    transform: translateY(-4px);                /* card lifts up on hover */
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);/* stronger shadow while lifted */
+}
+
+.card h3 {
+    color: var(--blue-dark);                    /* card heading colour */
+    margin-bottom: 8px;                         /* space below heading */
+}
+
+.card .number {
+    font-size: 2.4rem;                          /* big number for "Total Students" */
+    font-weight: 700;                           /* bold */
+    color: var(--blue);                         /* blue number */
+}
+
+.card p {
+    color: var(--muted);                        /* lighter description text */
+}
+
+/* ===== TABLES ===== */
+.table-wrapper {
+    background: var(--white);                   /* white background behind the table */
+    border-radius: 10px;                        /* rounded corners */
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); /* soft shadow */
+    overflow-x: auto;                           /* horizontal scroll on small screens instead of breaking layout */
+}
+
+table {
+    width: 100%;                                /* table fills the wrapper */
+    border-collapse: collapse;                  /* single thin lines between cells */
+}
+
+th, td {
+    padding: 12px 14px;                         /* space inside each cell */
+    text-align: left;                           /* left-aligned text */
+    border-bottom: 1px solid var(--border);     /* thin line under each row */
+}
+
+th {
+    background: var(--blue-dark);               /* dark blue header row */
+    color: var(--white);                        /* white header text */
+    white-space: nowrap;                        /* header text stays on one line */
+}
+
+tr:hover td {
+    background: var(--blue-light);              /* row highlights when the mouse is over it */
+}
+
+.actions {
+    display: flex;                              /* Edit and Delete buttons side by side */
+    gap: 6px;                                   /* space between them */
+}
+
+/* ===== TOP ROW (title on the left, button on the right) ===== */
+.page-header {
+    display: flex;                              /* one row */
+    justify-content: space-between;             /* title left, button right */
+    align-items: center;                        /* vertically centred */
+    flex-wrap: wrap;                            /* wrap on small screens */
+    gap: 10px;                                  /* space between items */
+    margin-bottom: 20px;                        /* space below */
+}
+
+.page-header .page-title {
+    margin-bottom: 0;                           /* the header already provides the spacing */
+}
+
+/* ===== FOOTER ===== */
+.footer {
+    text-align: center;                         /* centred text */
+    padding: 14px;                              /* space inside */
+    background: var(--white);                   /* white strip */
+    color: var(--muted);                        /* lighter text */
+    font-size: 0.9rem;                          /* smaller text */
+    border-top: 1px solid var(--border);        /* thin line above */
+}
+
+/* ===== RESPONSIVE: rules applied only on screens 768px wide or smaller ===== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 12px 16px;                     /* less padding on small screens */
+        flex-direction: column;                 /* brand above, links below */
+        align-items: flex-start;                /* align to the left */
+    }
+
+    .container {
+        margin: 20px auto;                      /* smaller vertical spacing */
+    }
+
+    .auth-card,
+    .form-card {
+        padding: 20px;                          /* smaller padding inside boxes */
+    }
+
+    th, td {
+        padding: 10px;                          /* tighter table cells */
+        font-size: 0.9rem;                      /* smaller table text */
+    }
+}
