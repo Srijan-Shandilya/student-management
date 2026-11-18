@@ -1,0 +1,21 @@
+# Name: Srijan Shandilya | Roll Number: 20231BCA0248
+
+# VS Code editor settings (specific to your computer, not part of the project)
+.vscode/
+
+# Windows system files that appear automatically in folders
+Thumbs.db
+desktop.ini
+
+# macOS system file (in case a classmate opens the project on a Mac)
+.DS_Store
+
+# Log files produced by PHP or the server
+*.log
+
+# Temporary test files we create while debugging (never commit these)
+test*.php
+
+# Backup and temporary files created by editors
+*.bak
+*.tmp
