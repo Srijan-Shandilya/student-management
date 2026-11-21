@@ -3,6 +3,7 @@
 
 require_once 'includes/auth_check.php';            // the guard: only logged-in users may see student records
 require_once 'config/db.php';                      // gives us the $conn database connection
+require_once 'includes/csrf.php';                  // NEW: loads the CSRF helper functions
 
 $students = [];                                    // will hold all student rows (empty list by default)
 $success  = '';                                    // green message (set by add, edit or delete pages)
@@ -82,6 +83,7 @@ require_once 'includes/header.php';                // prints the top of the page
                 <form action="delete_student.php" method="POST"
                       onsubmit="return confirm('Delete this student record? This cannot be undone.');">
                     <input type="hidden" name="id" value="<?php echo (int)$s['id']; ?>"> <!-- hidden field carries the id to delete_student.php -->
+                    <?php echo csrf_field(); ?>                             <!-- NEW: every Delete form carries the token -->
                     <button type="submit" class="btn btn-danger btn-small">Delete</button>
                 </form>
             </td>

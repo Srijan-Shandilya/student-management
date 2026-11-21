@@ -3,6 +3,8 @@
 
 require_once 'includes/auth_check.php';            // the guard: only logged-in users may use this page
 require_once 'config/db.php';                      // gives us the $conn database connection
+require_once 'includes/csrf.php';                  // loads the CSRF helper functions
+require_once 'includes/xml_helper.php';            // NEW 7B: gives us sync_students_xml()
 
 // The allowed course names; also used to build the dropdown below
 $courses = ['BCA', 'BBA', 'B.Com', 'B.Sc', 'MCA'];
@@ -20,13 +22,18 @@ $old = [
     'contact_number'  => ''
 ];
 
-// Read the one-time success message saved before the redirect (see end of the POST block)
+// Read the one-time success message saved before the redirect
 if (isset($_SESSION['flash_success'])) {
     $success = $_SESSION['flash_success'];         // copy to a normal variable
     unset($_SESSION['flash_success']);             // delete it so it shows only once
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {       // true only when the form has been submitted
+
+    // Wrong or missing token adds an error, which stops the INSERT below
+    if (!csrf_verify()) {
+        $errors[] = 'Security check failed. Please reload the page and try again.';
+    }
 
     // Read and clean every field; ?? '' avoids errors if a field is missing
     $old['register_number'] = strtoupper(trim($_POST['register_number'] ?? '')); // uppercase so abc123 and ABC123 are treated as the same
@@ -96,9 +103,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {       // true only when the form ha
                 $insert->execute();                              // run the INSERT
                 $insert->close();
 
-                // Post/Redirect/Get: save the message, then redirect so F5 cannot resubmit the form
                 $_SESSION['flash_success'] = 'Student added successfully.';
-                header('Location: view_students.php');
+
+                // NEW 7B: rebuild students.xml so it includes the new student
+                if (!sync_students_xml($conn)) {                 // false means the XML file could not be written
+                    // The student IS saved in MySQL; only the XML copy failed, so show a warning, not a failure
+                    $_SESSION['flash_error'] = 'Student saved, but students.xml could not be updated. Use "Regenerate XML" on the XML page.';
+                }
+
+                // Post/Redirect/Get: redirect so F5 cannot resubmit the form
+                header('Location: view_students.php');           // go to the list so the user sees the new record
                 exit;
             }
         } catch (mysqli_sql_exception $e) {
@@ -130,6 +144,8 @@ require_once 'includes/header.php';                // prints the top of the page
 
 <!-- action="" posts back to this same file; novalidate lets our JavaScript show the messages -->
 <form id="studentForm" class="form-card" action="" method="POST" novalidate>
+
+    <?php echo csrf_field(); ?>                    <!-- prints the hidden token input -->
 
     <div class="form-group">
         <label for="register_number">Register Number</label>

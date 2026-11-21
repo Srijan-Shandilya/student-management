@@ -3,11 +3,19 @@
 
 session_start();                                   // needed to read and write $_SESSION
 require_once 'config/db.php';                      // gives us the $conn database connection
+require_once 'includes/csrf.php';                  // NEW: loads the CSRF helper functions
 
 // This file only accepts form submissions; anyone typing its URL is sent to the login page
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: index.php');
     exit;
+}
+
+// NEW: reject the request if the secret token is missing or wrong
+if (!csrf_verify()) {
+    $_SESSION['flash_error'] = 'Security check failed. Please try again.';  // message for the login page
+    header('Location: index.php');                 // go back to the login form
+    exit;                                          // stop: nothing else runs
 }
 
 $username = trim($_POST['username'] ?? '');        // read username; ?? '' avoids an error if the field is missing; trim removes spaces
@@ -32,6 +40,7 @@ try {
     // Does the user exist AND does the typed password match the stored hash?
     if ($user && password_verify($password, $user['password'])) {
         session_regenerate_id(true);               // new session id for safety
+        unset($_SESSION['csrf_token']);            // NEW: delete the old token so a fresh one is made after login
         $_SESSION['user_id'] = $user['id'];        // this is what auth_check.php looks for
         $_SESSION['username'] = $user['username']; // used to show "Welcome, name"
         header('Location: dashboard.php');         // login success

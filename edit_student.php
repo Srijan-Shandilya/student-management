@@ -3,6 +3,8 @@
 
 require_once 'includes/auth_check.php';            // the guard: only logged-in users may edit records
 require_once 'config/db.php';                      // gives us the $conn database connection
+require_once 'includes/csrf.php';                  // loads the CSRF helper functions
+require_once 'includes/xml_helper.php';            // NEW 7B: gives us sync_students_xml()
 
 // The allowed course names; also used to build the dropdown below (same list as add_student.php)
 $courses = ['BCA', 'BBA', 'B.Com', 'B.Sc', 'MCA'];
@@ -54,6 +56,11 @@ $old = [
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {       // true only when the form has been submitted
+
+    // Wrong or missing token adds an error, which stops the UPDATE below
+    if (!csrf_verify()) {
+        $errors[] = 'Security check failed. Please reload the page and try again.';
+    }
 
     // Replace the saved values with what the user typed (read and clean every field)
     $old['register_number'] = strtoupper(trim($_POST['register_number'] ?? '')); // uppercase so abc123 and ABC123 are the same
@@ -123,8 +130,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {       // true only when the form ha
                 $update->execute();                                   // run the UPDATE
                 $update->close();
 
-                // Post/Redirect/Get: save the message, then go to the list
                 $_SESSION['flash_success'] = 'Student updated successfully.';
+
+                // NEW 7B: rebuild students.xml so it shows the updated details
+                if (!sync_students_xml($conn)) {                      // false means the XML file could not be written
+                    // The change IS saved in MySQL; only the XML copy failed, so show a warning
+                    $_SESSION['flash_error'] = 'Student updated, but students.xml could not be updated. Use "Regenerate XML" on the XML page.';
+                }
+
+                // Post/Redirect/Get: go to the list
                 header('Location: view_students.php');
                 exit;
             }
@@ -156,6 +170,7 @@ require_once 'includes/header.php';                // prints the top of the page
 
     <!-- Hidden field: tells the POST request WHICH student to update -->
     <input type="hidden" name="id" value="<?php echo $id; ?>">
+    <?php echo csrf_field(); ?>                    <!-- prints the hidden token input -->
 
     <div class="form-group">
         <label for="register_number">Register Number</label>

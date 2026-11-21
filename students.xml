@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Name: Srijan Shandilya | Roll Number: 20231BCA0248 -->
+<students>
+  <student id="4">
+    <register_number>20231BCA0124</register_number>
+    <name>Error</name>
+    <course>B.Com</course>
+    <semester>8</semester>
+    <email>errorExample@gmaiil.com</email>
+  </student>
+  <student id="1">
+    <register_number>20231BCA0248</register_number>
+    <name>Srijan Shandilya</name>
+    <course>BCA</course>
+    <semester>5</semester>
+    <email>srijan@example.com</email>
+  </student>
+  <student id="2">
+    <register_number>20241BCA0069</register_number>
+    <name>Dhairya Mishra</name>
+    <course>BCA</course>
+    <semester>5</semester>
+    <email>dhairya@example.com</email>
+  </student>
+  <student id="3">
+    <register_number>20241MCA0021</register_number>
+    <name>Fool</name>
+    <course>BCA</course>
+    <semester>5</semester>
+    <email>fool@example.com</email>
+  </student>
+</students>

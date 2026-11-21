@@ -2,6 +2,7 @@
 /* Name: Srijan Shandilya | Roll Number: 20231BCA0248 */
 
 session_start();                                   // start or resume the session
+require_once 'includes/csrf.php';                  // NEW: loads csrf_token(), csrf_field(), csrf_verify()
 
 // If the user is already logged in, skip the login page
 if (isset($_SESSION['user_id'])) {
@@ -58,6 +59,7 @@ if (isset($_GET['logout'])) {
 
             <!-- Form sends data to login.php using POST (POST keeps the password out of the URL) -->
             <form id="loginForm" action="login.php" method="POST" novalidate>
+                <?php echo csrf_field(); ?>                                <!-- NEW: prints the hidden token input -->
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" placeholder="Enter username">

@@ -1,0 +1,6 @@
+# Name: Srijan Shandilya | Roll Number: 20231BCA0248
+
+# Block direct browser access to the XML file. PHP can still read it from disk
+<Files "students.xml">
+    Require all denied
+</Files>

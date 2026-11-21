@@ -3,6 +3,7 @@
 
 session_start();                                   // start or resume the session
 require_once 'config/db.php';                      // database connection
+require_once 'includes/csrf.php';                  // NEW: loads the CSRF helper functions
 
 // A logged-in user has no reason to register again
 if (isset($_SESSION['user_id'])) {
@@ -14,6 +15,12 @@ $errors = [];                                      // list of error messages (em
 $username = '';                                    // remembers the typed username so the form can refill it
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {       // true only when the form has been submitted
+
+    // NEW: if the token is wrong, add an error. The database step below only runs when $errors is empty
+    if (!csrf_verify()) {
+        $errors[] = 'Security check failed. Please reload the page and try again.';
+    }
+
     $username = trim($_POST['username'] ?? '');            // read and clean the inputs
     $password = $_POST['password'] ?? '';
     $confirm  = $_POST['confirm_password'] ?? '';
@@ -96,6 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {       // true only when the form ha
 
             <!-- action="" means: post back to this same file -->
             <form id="registerForm" action="" method="POST" novalidate>
+                <?php echo csrf_field(); ?>                             <!-- NEW: prints the hidden token input -->
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" placeholder="Choose a username"
